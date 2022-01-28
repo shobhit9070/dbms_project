@@ -14,6 +14,7 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect("/")
 
+
 def products_details(request):
     prod_obj = product.objects.all()
     context = {"prod_obj": prod_obj}
@@ -24,6 +25,8 @@ def products_details(request):
 def displayCart(request):
     cart_list = []
     customre_no = request.user.id
+    if customre_no == None:
+        return HttpResponseRedirect("/accounts/google/login/")
     cart_obj = cart.objects.filter(cart_customer_id=customre_no)
     for i in cart_obj:
         prod_id = i.cart_product_id
@@ -35,9 +38,11 @@ def displayCart(request):
 
 
 def addtoCart(request, value):
+    customre_no = request.user.id
+    if customre_no == None:
+        return HttpResponseRedirect("/accounts/google/login/")
     prod_obj = product.objects.all()
     context = {"prod_obj": prod_obj}
-    customre_no = request.user.id
     cart_obj = cart.objects.all()
     for i in cart_obj:
         if i.cart_customer_id == customre_no and i.cart_product_id == value:
@@ -90,8 +95,9 @@ def checkout_success(request):
         prod_id = i.cart_product_id
         prod_details = product.objects.get(product_id=prod_id)
         prod_count =  i.cart_product_quantity
-        total_price += prod_details.product_price * prod_count
+        total_price += prod_details.product_price * prod_count 
         prod_list.append((prod_details,prod_count))
+    total_price = total_price * 0.8
     context = {"cart_obj": prod_list, "total_price": total_price}
 
     return render(request, "order.html",context)
@@ -136,6 +142,11 @@ def place_order(request):
 
 def my_orders(request):
     curr_cust_id = request.user.id
+    if curr_cust_id == None:
+        return HttpResponseRedirect("/accounts/google/login/")
+    cust_id = customer.objects.filter(customer_id=curr_cust_id)
+    if len(cust_id) == 0:
+        return HttpResponseRedirect("/products/")
     customer_id = customer.objects.get(customer_id=curr_cust_id)
     order_obj = orders.objects.filter(order_customer_id=customer_id.customer_id).order_by('-order_date')
     order_list = []
@@ -145,3 +156,23 @@ def my_orders(request):
     context = {"order_list": order_list}
     return render(request, "my_orders.html", context)
 
+def all_orders(request):
+    order_obj = orders.objects.all()
+    order_list = []
+    for i in order_obj:
+        product_list = product.objects.get(product_id=i.order_product_id_id)
+        order_list.append((i,product_list))
+    context = {"order_list": order_list}
+    return render(request, "admin_orders.html", context)
+
+def all_orders_filter(request):
+    data = request.POST
+    filter = data.get("filtering")
+    print(data.get("filtering"))
+    order_obj = orders.objects.all().order_by(filter)
+    order_list = []
+    for i in order_obj:
+        product_list = product.objects.get(product_id=i.order_product_id_id)
+        order_list.append((i,product_list))
+    context = {"order_list": order_list}
+    return render(request, "admin_orders.html", context)

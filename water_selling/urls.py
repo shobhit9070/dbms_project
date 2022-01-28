@@ -32,4 +32,7 @@ urlpatterns = [
     path("checkout_success/", views.checkout_success, name="checkout_success"),
     path("place_order/", views.place_order, name="order_now"),
     path("myorders/",views.my_orders, name="my_orders"),
+    path("allorders/",views.all_orders, name="all_orders"),
+    path("filter_orders/",views.all_orders_filter, name="filter_orders"),
+    path('accounts/', include('allauth.urls')),
 ]

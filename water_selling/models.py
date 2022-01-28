@@ -12,6 +12,7 @@ class employee(models.Model):
     employee_age = models.IntegerField()
     employee_address = models.CharField(max_length=100)
     employee_contact = models.IntegerField()
+    employee_salary = models.IntegerField()
 
     def __str__(self):
         return self.employee_name
@@ -89,7 +90,7 @@ class transaction(models.Model):
     transaction_total = models.IntegerField()
 
     def __str__(self):
-        return self.transaction_id
+        return str(self.transaction_id)
 
 class delivery(models.Model):
     delivery_id = models.IntegerField(primary_key=True)
@@ -105,4 +106,4 @@ class delivery(models.Model):
     delivery_delivery_man = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.delivery_id
+        return str(self.delivery_id)
