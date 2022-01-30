@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Your Orders</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="/static/style.css" media="screen" type="text/css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.store.js"></script>
+</head>
+
+<body>
+	
+<div id="site">
+	<header id="masthead">
+	</header>
+	<div id="content">
+		<h1>Your Orders</h1>
+		<div>
+			<form action="/filter_orders/" method="post" id="checkout-order-form">
+				{% csrf_token %}
+				<!-- <div>
+					<label for="name">Apply Filter</label>
+					<input type="text" name="name" id="name" data-type="string" data-message="This field cannot be empty"  required/>
+				</div> -->
+				<label for="">Apply Filter</label>
+				<select name = "filtering" >
+					<option value="order_id">order_id</option>
+					<option value="order_date">order_date</option>
+					<option value="order_quantity">order_quantity</option>
+				</select>
+				<p><input type="submit" id="submit-order" value="Submit" class="btn" /></p>
+			</form>
+
+		</div>
+	
+		<form id="shopping-cart" action="cart.html" method="post">
+			<table class="shopping-cart">
+			  <thead>
+				<tr>
+					<th scope="col">Order Id</th>
+					<th scope="col">Product Name</th>
+					<th scope="col" colspan="2">Quantity</th>
+                    <th scope="col" colspan="2">Date</th>
+				</tr>
+			  </thead>
+			  <tbody>
+				{% for order,product in order_list %}
+					<tr>
+						<th scope="col">{{order.order_id}}</th>
+						<th scope="col">{{product.product_name}}</th>
+						<th scope="col" colspan="2">{{order.order_quantity }}</th>
+                        <th scope="col" colspan="2">{{order.order_date }}</th>
+					</tr>
+				{% endfor %}
+			  </tbody>
+			</table>
+			<ul id="shopping-cart-actions">
+
+				<li>
+					<a href="/home" class="btn">Home</a>
+				</li>
+		</form>
+	</div>
+	
+	
+
+</div>
+
+
+
+</body>
+</html>	
