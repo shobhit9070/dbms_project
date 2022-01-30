@@ -59,6 +59,9 @@ class cart(models.Model):
     cart_product_id = models.IntegerField()
     cart_product_quantity = models.IntegerField()
 
+    def __str__(self):
+        return str(self.cart_customer_id)
+
 
 class container(models.Model):
     container_id = models.IntegerField()
